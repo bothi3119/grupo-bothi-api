@@ -62,4 +62,8 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "devise", "~> 4.9"
+gem "bcrypt", "~> 3.1.7"
+gem "jwt"
+gem "rack-cors"
+
+gem "dotenv-rails", groups: [:development, :test]
