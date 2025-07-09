@@ -7,3 +7,17 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+User.find_or_create_by!(email: "grupobothi@mailinator.com") do |user|
+  user.assign_attributes(
+    first_name: "GrupoBothi",
+    last_name: "Admin",
+    second_last_name: "Super",
+    phone: "+525512345678",
+    password: "GrupoBothi12345*",
+    password_confirmation: "GrupoBothi12345*",
+    active: true,
+    role: :super_admin,
+  )
+end
+
+puts "Super admin creado/actualizado exitosamente!"

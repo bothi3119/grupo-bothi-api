@@ -67,3 +67,12 @@ gem "jwt"
 gem "rack-cors"
 
 gem "dotenv-rails", groups: [:development, :test]
+gem "active_model_serializers"
+
+gem "pagy"
+
+# Gemfile
+group :development, :test do
+  gem "pry-rails"
+  gem "pry-byebug" # Para debugging con byebug
+end
