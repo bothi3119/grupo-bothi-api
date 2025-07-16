@@ -1,3 +1,4 @@
+# app/models/user.rb
 class User < ApplicationRecord
   has_secure_password validations: false
 
@@ -32,7 +33,7 @@ class User < ApplicationRecord
                     uniqueness: true,
                     format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, presence: true
-  validates :password, presence: true, length: { minimum: 6 }, if: :set_password?
+  validates :password, presence: true, length: { minimum: 6 }, if: :password_required?
 
   def full_name
     [first_name, middle_name, last_name, second_last_name].compact.join(" ")
@@ -42,9 +43,33 @@ class User < ApplicationRecord
     !active?
   end
 
+  # Method to update password with confirmation
+  def update_password(current_password, new_password, new_password_confirmation)
+    errors.add(:current_password, "es incorrecta") unless authenticate(current_password)
+    errors.add(:new_password, "no puede estar vacía") if new_password.blank?
+    errors.add(:new_password, "debe tener al menos 6 caracteres") if new_password.present? && new_password.length < 6
+    errors.add(:new_password_confirmation, "no coincide con la nueva contraseña") if new_password != new_password_confirmation
+
+    return false unless errors.empty?
+
+    update(password: new_password)
+  end
+
+  # Method to reset password with token validation
+  def reset_password_with_token(token, new_password, new_password_confirmation)
+    errors.add(:new_password, "no puede estar vacía") if new_password.blank?
+    errors.add(:new_password, "debe tener al menos 6 caracteres") if new_password.present? && new_password.length < 6
+    errors.add(:new_password_confirmation, "no coincide con la nueva contraseña") if new_password != new_password_confirmation
+
+    return false unless errors.empty?
+
+    update(password: new_password)
+  end
+
   private
 
-  def set_password?
-    @set_password
+  def password_required?
+    # Require password for new records or when password is being changed
+    new_record? || !password.nil?
   end
 end

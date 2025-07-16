@@ -13,11 +13,21 @@ Rails.application.routes.draw do
   # root "posts#index"
   namespace :api do
     namespace :v1 do
-      post "auth/login", to: "authentication#login"
+      # Authentication routes
+      post "/auth/login", to: "authentication#login"
+
+      # User routes
       resources :users do
         member do
-          patch :active, action: :update_active
+          patch :update_active
         end
+      end
+
+      # Password routes
+      scope "/passwords" do
+        put "/update", to: "passwords#update"                    # Update password for authenticated user
+        post "/reset", to: "passwords#reset"                      # Send password reset email
+        put "/update_with_token", to: "passwords#update_with_token" # Update password using reset token
       end
     end
   end

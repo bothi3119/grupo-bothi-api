@@ -1,7 +1,6 @@
 module Api::V1
   class UsersController < ApplicationController
     before_action :set_user, only: [:show, :update, :destroy, :update_active]
-    skip_before_action :authenticate_request, only: [:create]
 
     # GET /api/v1/users
     def index
@@ -23,9 +22,12 @@ module Api::V1
     # POST /api/v1/users
     def create
       @user = User.new(user_create_params)
-      raise ApiErrors::UnprocessableEntityError.new(details: @user.errors) unless @user.save
-
-      render json: @user, status: :created
+      if @user.save
+        #send_password_reset_email(@user)
+        render json: UserSerializer.new(@user).serializable_hash, status: :created
+      else
+        render_error_response
+      end
     end
 
     # PATCH/PUT /api/v1/users/1
@@ -37,7 +39,7 @@ module Api::V1
     # PATCH /api/v1/users/1/active
     def update_active
       raise ApiErrors::BadRequestError.new(
-        details: "Active parameter is required"
+        details: "Active parameter is required",
       ) unless params[:active].in?([true, false])
 
       if @user.update(active: params[:active])
@@ -59,6 +61,17 @@ module Api::V1
       @user = User.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise ApiErrors::NotFoundError.new(message: "User not found")
+    end
+
+    def send_password_reset_email(user)
+      Email::PasswordResetService.new(user).call
+    rescue ArgumentError => e
+      Rails.logger.error "PasswordResetService error: #{e.message}"
+    end
+
+    def render_error_response
+      error = ApiErrors::UnprocessableEntityError.new(details: @user.errors)
+      render json: error.to_h, status: error.status
     end
 
     def user_create_params

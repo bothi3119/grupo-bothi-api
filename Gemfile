@@ -71,6 +71,8 @@ gem "active_model_serializers"
 
 gem "pagy"
 
+gem "resend"
+
 # Gemfile
 group :development, :test do
   gem "pry-rails"
