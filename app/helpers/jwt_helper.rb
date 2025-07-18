@@ -1,6 +1,6 @@
 # app/helpers/jwt_helper.rb
 module JwtHelper
-  SECRET_KEY = ENV["SECRET_KEY_BASE"] || Rails.application.credentials.secret_key_base
+  SECRET_KEY = ENV["SECRET_KEY_BASE"]
   DEFAULT_EXPIRATION = 24.hours
 
   def jwt_encode(payload, exp = DEFAULT_EXPIRATION.from_now)

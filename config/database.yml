@@ -84,8 +84,8 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: grupo_bothi_api_production
-    username: grupo_bothi_api
+    database: <%= ENV["DATA_BASE_URL"] %>
+    username: <%= ENV["GRUPO_BOTHI_API_USER_PASSWORD"] %>
     password: <%= ENV["GRUPO_BOTHI_API_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production

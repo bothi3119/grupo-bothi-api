@@ -37,7 +37,6 @@ class ResendMailer
     end
 
     def sender_email
-      Rails.application.credentials.dig(:resend, :from_email) ||
       ENV["RESEND_FROM_EMAIL"]
     end
 
