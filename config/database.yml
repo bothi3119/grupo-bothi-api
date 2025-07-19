@@ -18,14 +18,14 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: bothi
-  password: Bothi12345*
-  host: localhost
   port: 5432
 
 development:
   <<: *default
   database: grupo_bothi_development
+  username: bothi
+  password: Bothi12345*
+  host: localhost
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -84,9 +84,10 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: <%= ENV["DATA_BASE_URL"] %>
-    username: <%= ENV["GRUPO_BOTHI_API_USER_PASSWORD"] %>
-    password: <%= ENV["GRUPO_BOTHI_API_DATABASE_PASSWORD"] %>
+    database: grupo_bothi_bd
+    username: grupo_bothi_bd_user
+    password: XJB5jFAD1jBZSDznQCKWyBJdYi4TD1sR
+    host: dpg-d1ts9ridbo4c73dusn50-a
   cache:
     <<: *primary_production
     database: grupo_bothi_api_production_cache
